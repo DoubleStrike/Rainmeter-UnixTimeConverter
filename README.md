@@ -1,18 +1,21 @@
 # Rainmeter-UnixTimeConverter
 Unix Time Conversion Plugin for Rainmeter
 
-This plugin does blah, blah, blah.
+This plugin converts a UNIX timestamp into human-readable date and time values.  It expects to be passed in a value via the "Source" parameter and can be passed a static string or the value of an existing Measure.  If you're passing in a measure, you must use  DynamicVariables=1 in your skin and enclose the measure name in square brackets.  See the sample skin below for details.
 
 ### Install
 Download latest build https://github.com/DoubleStrike/Rainmeter-UnixTimeConverter/releases
 
-Drop UnixTimeConverter.dll into local user's Rainmeter Plugins Folder (%appdata%\Rainmeter\Plugins).  Usually, this will be something like c:\users\UserNameHere\AppData\Roaming\Rainmeter\Plugins.
+Drop UnixTimeConverter.dll into local user's Rainmeter Plugins Folder (%appdata%\Rainmeter\Plugins).  Usually, this will be something like:
+```
+c:\users\UserNameHere\AppData\Roaming\Rainmeter\Plugins.
+```
 
 ### Usage
 
 The plugin requires a Source
 
-**Source:** a valid string
+**Source:** a valid string.  Optionally, the name of a measure to read from surrounded by brackets.  If using a measure name, *remember to set DynamicVariables=1* as well.
 
 
 Example:
@@ -99,4 +102,7 @@ Example:
 
 
 ### Changelog
-Please see commit history for detailed logs.  Major changes will be listed here.
+Please see commit history for detailed logs.  Major changes will be listed here in YYYY-MM-DD format.
+
+2020-05-04
+Initial code upload for public use.  Working but not a ton of error handling or debugging.  I intend to add that later.
