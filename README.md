@@ -4,111 +4,99 @@ Unix Time Conversion Plugin for Rainmeter
 This plugin does blah, blah, blah.
 
 ### Install
-Download latest build https://github.com/e2e8/Rainmeter-JsonParser/releases
+Download latest build https://github.com/DoubleStrike/Rainmeter-UnixTimeConverter/releases
 
-Drop JsonParser.dll into Rainmeter Plugins Folder
+Drop UnixTimeConverter.dll into local user's Rainmeter Plugins Folder (%appdata%\Rainmeter\Plugins).  Usually, this will be something like c:\users\UserNameHere\AppData\Roaming\Rainmeter\Plugins.
 
 ### Usage
 
-The plugin requires a Source and a Query
+The plugin requires a Source
 
-**Source:** valid json string
-
-**Query:** path to json token. Details here https://www.newtonsoft.com/json/help/html/SelectToken.htm
-
-Queries can be JSONPath or json property names with dot and index notation
-
-- Dot and index notation:
-    | | |
-    | --- | --- |
-    |dot notation | ```a.b``` |
-    |index notation | ```a['b']``` |
-    |arrays| ```a[0]```|
-
-    **Note**: json properties with a space must be accessed using index notation
-    
-- JSONPath: https://goessner.net/articles/JsonPath/
+**Source:** a valid string
 
 
 Example:
 ```
-[Weather]
-Measure=Plugin
-Plugin=WebParser.dll
-UpdateRate=600
-Url=http://api.openweathermap.org/...
-RegExp=(?siU)^(.*)$
+    [Rainmeter]
+    Update=1000
+    BackgroundMode=2
+    SolidColor=000000
 
-[Current.Temp]
-Measure=Plugin
-Plugin=JsonParser.dll
-Source=[Weather]
-Query="main.temp"
+    [MeasureInput]
+    # This just provides a test value input for the follwing meters.  Replace
+    #       it with whatever meter you choose.
+    Measure=String
+    String=1588611600
+
+    [mSecond]
+    Measure=Plugin
+    Plugin=UnixTimeConverter.dll
+    Type=Second
+
+    [mMinute]
+    Measure=Plugin
+    Plugin=UnixTimeConverter.dll
+    Type=Minute
+
+    [mHour]
+    Measure=Plugin
+    Plugin=UnixTimeConverter.dll
+    Type=Hour
+
+    [mDay]
+    Measure=Plugin
+    Plugin=UnixTimeConverter.dll
+    Type=Day
+
+    [mMonth]
+    Measure=Plugin
+    Plugin=UnixTimeConverter.dll
+    Type=Month
+
+    [mYear]
+    Measure=Plugin
+    Plugin=UnixTimeConverter.dll
+    Type=Year
+
+    [mDayOfWeek]
+    Measure=Plugin
+    Plugin=UnixTimeConverter.dll
+    Type=DayOfWeek
+    Source=[MeasureInput]
+    DynamicVariables=1
+
+    [mFormattedDate]
+    Measure=Plugin
+    Plugin=UnixTimeConverter.dll
+    Type=FormattedDate
+    Source=[MeasureInput]
+    DynamicVariables=1
+
+    [Text1]
+    Meter=STRING
+    MeasureName=mSecond
+    MeasureName2=mMinute
+    MeasureName3=mHour
+    MeasureName4=mDay
+    MeasureName5=mMonth
+    MeasureName6=mYear
+    MeasureName7=mDayOfWeek
+    MeasureName8=mFormattedDate
+    MeasureName9=MeasureInput
+    NumOfDecimals=1
+    X=5
+    Y=5
+    W=200
+    H=150
+    FontColor=99FFFF
+    FontSize=10
+    Text="Second: %1#CRLF#Minute: %2#CRLF#Hour: %3#CRLF#Day: %4#CRLF#Month: %5#CRLF#Year: %6#CRLF#DayOfWeek: %7#CRLF#FormattedDate: %8#CRLF#InputValue: %9#CRLF#"
 ```
 
 ### Options
 
-**Logging:** Set logging options. Syntax: _Option:Value,Option:Value..._
+**None at the moment** More to come
 
-| Options | |
-| --- | --- |
-| NoMatch | Log Warning when no match for query found   |
-| EmptySource | Log Error when source is empty          |
 
-| Values |     |
-| ------ | --- |
-| 0      | Off |
-| 1      | On  |
-
-Example:
-```
-[Data]
-Measure=Plugin
-Plugin=JsonParser.dll
-Source=...
-Query=...
-Logging=NoMatch:0,EmptySource:0
-```
-
-**Locale:** Set locale value. This defines certain region specific format such as decimal seperator. Defaults to InvariantCulture (empty string) which is basically English/American formating. More here: https://docs.microsoft.com/en-us/dotnet/api/system.globalization.cultureinfo
-
-Example:
-```
-[Data]
-Measure=Plugin
-Plugin=JsonParser.dll
-Source=...
-Query=...
-Locale="en-US"
-```
-
-### Section Variables
-
-JsonParser provides command that can be used in section variables
-
-**Query:** Parse Json inline. Arguments: _Query_ OR _Query, Source_ 
-
-Example:
-```
-[MeasureJson]
-Measure=Plugin
-Plugin=JsonParser.dll
-
-[Data]
-Meter=String
-Text=[MeasureJson:Query(query,{...})]
-```
-
-**Length:** Length of json array. Arguments: _Query_ OR _Query, Source_
-
-Example:
-```
-[MeasureJson]
-Measure=Plugin
-Plugin=JsonParser.dll
-
-[Length]
-Measure=Calc
-Formula=[MeasureJson:Length(query,{...})]
-```
-### Changes
+### Changelog
+Please see commit history for detailed logs.  Major changes will be listed here.
