@@ -111,7 +111,11 @@ namespace PluginUnixTimeConverter
 
         // Value of source data passed in from another meter
         string source = "";
+
         DateTime convertedTime;
+
+        // Store a reference to the API object for logging - set on Reload()
+        Rainmeter.API api_reference = null;
 
         private MeasureType Type = MeasureType.DayOfWeek;
 
@@ -119,12 +123,17 @@ namespace PluginUnixTimeConverter
         }
 
         internal void Reload(Rainmeter.API api, ref double maxValue) {
+            // Store API reference
+            api_reference = api;
+
             string type = api.ReadString("Type", "");
 
             source = api.ReadString("Source", "");
+            api.Log(API.LogType.Debug, $"Source: {source}");
 
             if (source != "") {
                 convertedTime = UnixTimeToDateTime(source);
+                api.Log(API.LogType.Debug, $"Converted Time: {convertedTime}");
             }
 
             switch (type.ToLowerInvariant()) {
@@ -225,9 +234,13 @@ namespace PluginUnixTimeConverter
         /// <param name="unixtime">The Unix time stamp you want to convert to DateTime as a string.</param>
         /// <returns>Returns a DateTime object that represents value of the Unix time.</returns>
         public DateTime UnixTimeToDateTime(string rawUnixTime) {
-            long unixTime = long.Parse(rawUnixTime.Trim());
+            try {
+                long unixTime = long.Parse(rawUnixTime.Trim());
 
-            return UnixTimeToDateTime(unixTime);
+                return UnixTimeToDateTime(unixTime);
+            } catch {
+                return DateTime.MinValue;
+            }
         }
 
         /// <summary>
@@ -243,8 +256,10 @@ namespace PluginUnixTimeConverter
 
                 return dtDateTime;
             } catch {
-                // HACK: Possible annoyance to troubleshoot: if an error happened, return today's date/time
-                return new DateTime(DateTime.Now.Ticks);
+                if (api_reference != null) api_reference.Log(API.LogType.Error, "UnixTimeConverter.dll: Could not convert input to DataTime object.");
+
+                // If an error happened, return the minimum value
+                return DateTime.MinValue;
             }
         }
 
