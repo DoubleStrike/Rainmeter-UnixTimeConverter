@@ -1,5 +1,5 @@
 ﻿/*
-  Copyright (C) 2020 Nikhil S. Shringarpurey
+  Copyright (C) 2020 Nikhil S. Shringarpurey and DoubleStrike Consulting, LLC
 */
 
 using System;
@@ -12,84 +12,6 @@ using Rainmeter;
  *      parameter and can be passed a static string or the value of an existing
  *      Measure.  If you're passing in a measure, you must use 
  *      DynamicVariables=1 in your skin.  See the sample skin below for details.
-*/
-
-// Sample skin using this plugin:
-/*
-    [Rainmeter]
-    Update=1000
-    BackgroundMode=2
-    SolidColor=000000
-
-    [MeasureInput]
-    # This just provides a test value input for the follwing meters.  Replace
-    #       it with whatever meter you choose.
-    Measure=String
-    String=1588611600
-
-    [mSecond]
-    Measure=Plugin
-    Plugin=UnixTimeConverter.dll
-    Type=Second
-
-    [mMinute]
-    Measure=Plugin
-    Plugin=UnixTimeConverter.dll
-    Type=Minute
-
-    [mHour]
-    Measure=Plugin
-    Plugin=UnixTimeConverter.dll
-    Type=Hour
-
-    [mDay]
-    Measure=Plugin
-    Plugin=UnixTimeConverter.dll
-    Type=Day
-
-    [mMonth]
-    Measure=Plugin
-    Plugin=UnixTimeConverter.dll
-    Type=Month
-
-    [mYear]
-    Measure=Plugin
-    Plugin=UnixTimeConverter.dll
-    Type=Year
-
-    [mDayOfWeek]
-    Measure=Plugin
-    Plugin=UnixTimeConverter.dll
-    Type=DayOfWeek
-    Source=[MeasureInput]
-    DynamicVariables=1
-
-    [mFormattedDate]
-    Measure=Plugin
-    Plugin=UnixTimeConverter.dll
-    Type=FormattedDate
-    Source=[MeasureInput]
-    DynamicVariables=1
-
-    [Text1]
-    Meter=STRING
-    MeasureName=mSecond
-    MeasureName2=mMinute
-    MeasureName3=mHour
-    MeasureName4=mDay
-    MeasureName5=mMonth
-    MeasureName6=mYear
-    MeasureName7=mDayOfWeek
-    MeasureName8=mFormattedDate
-    MeasureName9=MeasureInput
-    NumOfDecimals=1
-    X=5
-    Y=5
-    W=200
-    H=150
-    FontColor=99FFFF
-    FontSize=10
-    Text="Second: %1#CRLF#Minute: %2#CRLF#Hour: %3#CRLF#Day: %4#CRLF#Month: %5#CRLF#Year: %6#CRLF#DayOfWeek: %7#CRLF#FormattedDate: %8#CRLF#InputValue: %9#CRLF#"
 */
 
 namespace PluginUnixTimeConverter
@@ -115,7 +37,7 @@ namespace PluginUnixTimeConverter
         DateTime convertedTime;
 
         // Store a reference to the API object for logging - set on Reload()
-        Rainmeter.API api_reference = null;
+        Rainmeter.API api_ref = null;
 
         private MeasureType Type = MeasureType.DayOfWeek;
 
@@ -124,14 +46,19 @@ namespace PluginUnixTimeConverter
 
         internal void Reload(Rainmeter.API api, ref double maxValue) {
             // Store API reference
-            api_reference = api;
+            api_ref = api;
 
             string type = api.ReadString("Type", "");
 
             source = api.ReadString("Source", "");
             api.Log(API.LogType.Debug, $"Source: {source}");
 
+            // Check data validity
             if (source != "") {
+                if (source.Trim().Length < 9 && source.Trim().Length > 11) {
+                    api.Log(API.LogType.Warning, "Source: data length is not between 9 and 11 characters.  Bad data?  Parsing anyway...");
+                }
+
                 convertedTime = UnixTimeToDateTime(source);
                 api.Log(API.LogType.Debug, $"Converted Time: {convertedTime}");
             }
@@ -251,12 +178,11 @@ namespace PluginUnixTimeConverter
         public DateTime UnixTimeToDateTime(long unixTime) {
             try {
                 System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-                //dtDateTime = dtDateTime.AddMilliseconds(unixTime).ToLocalTime();
                 dtDateTime = dtDateTime.AddSeconds(unixTime).ToLocalTime();
 
                 return dtDateTime;
             } catch {
-                if (api_reference != null) api_reference.Log(API.LogType.Error, "UnixTimeConverter.dll: Could not convert input to DataTime object.");
+                if (api_ref != null) api_ref.Log(API.LogType.Error, "UnixTimeConverter.dll: Could not convert input to DataTime object.");
 
                 // If an error happened, return the minimum value
                 return DateTime.MinValue;
