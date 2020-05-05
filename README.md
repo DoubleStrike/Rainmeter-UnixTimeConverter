@@ -104,5 +104,7 @@ Example:
 ### Changelog
 Please see commit history for detailed logs.  Major changes will be listed here in YYYY-MM-DD format.
 
-2020-05-04
-Initial code upload for public use.  Working but not a ton of error handling or debugging.  I intend to add that later.
+| Version  | Date  | Comments  |
+|---|---|---|
+| 1.0.0  | 2020-05-04  | Initial code upload for public use.  Working but not a ton of error handling or debugging.  I intend to add that later.  |
+| 1.1.0  | 2020-05-05  | Error handling is improved and better examples are now included in the project. |
