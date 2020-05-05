@@ -104,7 +104,7 @@
   </PostBuildEventDependsOn>
     <PostBuildEvent>"$(SolutionDir)API\DllExporter.exe" "$(ConfigurationName)" "$(PlatformName)" "$(TargetDir)\" "$(TargetFileName)"
 
-7za.exe a -r -x!*obj* "$(SolutionDir)\RM_UnixTimeConverter-@(VersionNumber).zip" "$(ProjectDir)\U*.dll"
+7za.exe a -r -x!*obj* -x!*Debug* "$(SolutionDir)\RM_UnixTimeConverter-@(VersionNumber).zip" "$(ProjectDir)\U*.dll"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>
